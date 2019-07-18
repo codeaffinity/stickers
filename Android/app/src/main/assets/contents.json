@@ -11,6 +11,8 @@
       "publisher_website": "",
       "privacy_policy_website": "",
       "license_agreement_website": "",
+      "version_number_of_image_data":1,
+      "avoid_cache":false,
       "stickers": [
         {
           "image_file": "01_Cuppy_smile.webp",

@@ -75,6 +75,8 @@ class ContentFileParser {
         String publisherWebsite = null;
         String privacyPolicyWebsite = null;
         String licenseAgreementWebsite = null;
+        int versionNumberOfImageData = 0;
+        boolean avoidCache = false;
         List<Sticker> stickerList = null;
         while (reader.hasNext()) {
             String key = reader.nextName();
@@ -106,6 +108,12 @@ class ContentFileParser {
                 case "stickers":
                     stickerList = readStickers(reader);
                     break;
+                case "version_number_of_image_data":
+                    versionNumberOfImageData = reader.nextInt();
+                    break;
+                case "avoid_cache":
+                    avoidCache = reader.nextBoolean();
+                    break;
                 default:
                     reader.skipValue();
             }
@@ -128,8 +136,11 @@ class ContentFileParser {
         if (identifier.contains("..") || identifier.contains("/")) {
             throw new IllegalStateException("identifier should not contain .. or / to prevent directory traversal");
         }
+        if (versionNumberOfImageData <= 0) {
+            throw new IllegalStateException("version_number_of_image_data should be between 1 and " + Integer.MAX_VALUE);
+        }
         reader.endObject();
-        final StickerPack stickerPack = new StickerPack(identifier, name, publisher, trayImageFile, publisherEmail, publisherWebsite, privacyPolicyWebsite, licenseAgreementWebsite);
+        final StickerPack stickerPack = new StickerPack(identifier, name, publisher, trayImageFile, publisherEmail, publisherWebsite, privacyPolicyWebsite, licenseAgreementWebsite, versionNumberOfImageData, avoidCache);
         stickerPack.setStickers(stickerList);
         return stickerPack;
     }
